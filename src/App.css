@@ -195,3 +195,13 @@ main { overflow: hidden; background-color: var(--paper); background-image: radia
     border-right-color: var(--border);
   }
 }
+
+.teammate-row {
+  grid-template-columns: 80px 1fr 1fr 1fr;
+}
+
+@media (max-width: 760px) {
+  .teammate-row {
+    grid-template-columns: 1fr;
+  }
+}
