@@ -3,8 +3,17 @@ import { QRCodeSVG } from 'qrcode.react'
 import './App.css'
 
 const events = [
-  { id: 'ctf', number: '01', title: 'CTF', eyebrow: 'CAPTURE THE FLAG', description: 'Break in. Find the flag. Leave no trace.', meta: ['1-4 PLAYERS', '₹100 / ₹150'], accent: 'gold' },
-  { id: 'murder', number: '02', title: 'Cyber Heist', eyebrow: 'MURDER MYSTERY', description: 'Everyone has a motive. Can your team find the truth?', meta: ['2-4 PLAYERS', '₹100 / ₹150'], accent: 'red' },
+  { id: 'ctf', file: 'CTF.EXE', title: 'CTF', eyebrow: 'CAPTURE THE FLAG', description: 'Break in. Find the flag. Leave no trace.', team: '1-4 PLAYERS' },
+  { id: 'murder', file: 'CYBER_HEIST.EXE', title: 'Cyber Heist', eyebrow: 'MURDER MYSTERY', description: 'Everyone has a motive. Can your team find the truth?', team: '2-4 PLAYERS' },
+]
+
+const sessions = ['AIML', 'Cybersecurity']
+
+const patrons = [
+  ['Dr. Santosh Pattar', 'Computer Society Faculty Advisor'],
+  ['Nalini Karchi', 'IEEE Branch Counselor'],
+  ['Dr. Rajashri Khanai', 'HoD CSE'],
+  ['Dr. S.F. Patil', 'Principal'],
 ]
 
 const faqs = [
@@ -46,6 +55,32 @@ const compressImage = (file) => new Promise((resolve, reject) => {
   image.onerror = () => reject(new Error('Unreadable image'))
   image.src = URL.createObjectURL(file)
 })
+
+// Retro desktop window used for every panel: mustard title bar with the _ □ × controls from the poster.
+// Passing `onClose` turns the × into a real close button.
+function Window({ title, className = '', onClose, children }) {
+  return (
+    <div className={`window ${className}`}>
+      <div className="window-titlebar">
+        <span className="window-title">{title}</span>
+        <span className="window-controls">
+          <i aria-hidden="true">_</i>
+          <i aria-hidden="true">□</i>
+          {onClose ? <button type="button" onClick={onClose} aria-label="Close">×</button> : <i aria-hidden="true">×</i>}
+        </span>
+      </div>
+      <div className="window-body">{children}</div>
+    </div>
+  )
+}
+
+const Trophy = () => (
+  <svg className="trophy" viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
+    <path fill="var(--gold)" d="M4 1h8v6h-1v1h-1v1H6V8H5V7H4zM1 2h3v1H2v2h1v1h1v1H2V6H1zM12 2h3v4h-1v1h-2V6h1V5h1V3h-2zM7 9h2v2H7z" />
+    <path fill="var(--gold-dark)" d="M7 3h2v1h1v1H9v1H7V5H6V4h1zM5 11h6v1H5z" />
+    <path fill="var(--ink)" d="M4 12h8v3H4z" />
+  </svg>
+)
 
 function App() {
   const [activeEvent, setActiveEvent] = useState(null)
@@ -105,28 +140,112 @@ function App() {
 
   return (
     <main>
-      <nav className="topbar" aria-label="Primary navigation">
-        <a className="brand" href="#home"><span className="brand-mark">✦</span> IEEE KLE TECHNICAL EVENTS</a>
-        <div className="nav-links"><a href="#events">EVENTS</a><a href="#details">DETAILS</a><a href="#faq">FAQ</a></div>
-        <a className="nav-register" href="#events">REGISTER <span>↗</span></a>
-      </nav>
+      <header className="topbar">
+        <div className="topbar-titlebar">
+          <span className="window-title">VISTAAR.EXE — IEEE KLE TECH</span>
+          <span className="window-controls" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+        </div>
+        <nav className="menubar" aria-label="Primary navigation">
+          <a href="#events"><u>E</u>vents</a>
+          <a href="#sessions"><u>S</u>essions</a>
+          <a href="#details"><u>D</u>etails</a>
+          <a href="#faq"><u>H</u>elp</a>
+          <a className="menubar-register" href="#events">REGISTER ↗</a>
+        </nav>
+      </header>
 
       <section className="hero" id="home">
-        <div className="hero-copy"><p className="kicker">IEEE COMPUTER SOCIETY PRESENTS <span className="blink">_</span></p><h1>VISTAAR<span className="title-dot">.</span></h1><p className="hero-subtitle">THE ANNUAL TECHNICAL CONCLAVE</p><div className="hero-rule" /><p className="hero-note">One day. Two cases. Zero room for guesswork.</p><a className="primary-button" href="#events">CHOOSE YOUR CASE <span>→</span></a></div>
-        <div className="hero-art" aria-hidden="true"><div className="crosshair">+</div><div className="terminal-window"><div className="window-bar"><i /><i /><i /> <span>root@vistaar:~</span></div><div className="terminal-text"><span>$ ./launch_event.sh</span><strong>ACCESS GRANTED</strong><span>mission_date: 13.10.2026</span><span>status: registrations_open</span><b>_</b></div></div><div className="stamp">13<br /><small>OCT<br />2026</small></div></div>
+        <div className="logo-strip"><img src="/logos.png" alt="IEEE Bangalore Section, IEEE NKSS, KLE Technological University, IEEE KLE Tech Student Branch, IEEE Computer Society, ACE Department of CSE" /></div>
+        <p className="kicker">KLE TECHNOLOGICAL UNIVERSITY, BELGAUM<br />IEEE STUDENT BRANCH</p>
+        <div className="kicker-rule" />
+        <span className="sparkle sparkle-a" aria-hidden="true">✦</span>
+        <span className="sparkle sparkle-b" aria-hidden="true">✛</span>
+        <h1 className="pixel-title">VISTAAR</h1>
+        <div className="hero-tags"><span>TECHNICAL EVENTS</span><span>INDUSTRY SEMINARS</span></div>
+        <div className="hero-windows">
+          <Window title="DATE" className="date-window">
+            <strong>13<sup>TH</sup></strong>
+            <span>OCTOBER<br />2026</span>
+          </Window>
+          <Window title="PRIZE POOL" className="prize-window">
+            <Trophy />
+            <div><strong>₹10,000</strong><span>TOTAL PRIZE POOL</span></div>
+          </Window>
+          <Window title="root@vistaar:~" className="terminal-window">
+            <div className="terminal">
+              <span>$ ./launch_event.sh</span>
+              <strong>ACCESS GRANTED</strong>
+              <span>status: registrations_open</span>
+              <b className="cursor">_</b>
+            </div>
+          </Window>
+        </div>
+        <a className="pixel-button primary" href="#events">CHOOSE YOUR CASE →</a>
+        <p className="motto">CODE <i /> COLLABORATE <i /> CREATE <i /> BEYOND</p>
       </section>
 
-      <section className="event-section section-shell" id="events"><div className="section-heading"><p className="section-number">01 / SELECT A MISSION</p><h2>THE CASES</h2><p>Pick a side of the screen. Build your team. Enter the story.</p></div><div className="event-grid">{events.map((event) => <article className={`event-card ${event.accent}`} key={event.id}><div className="card-top"><span>FILE_{event.number}</span><span className="live-dot">● LIVE</span></div><div className="event-icon">{event.id === 'ctf' ? '⌘' : '✣'}</div><p className="event-eyebrow">{event.eyebrow}</p><h3>{event.title}</h3><p className="event-description">{event.description}</p><div className="event-meta">{event.meta.map((item) => <span key={item}>{item}</span>)}</div><button className="card-button" type="button" onClick={() => openRegistration(event.id)}>REGISTER <span>→</span></button></article>)}</div><p className="fee-note"><span>FEE KEY</span> IEEE MEMBER <b>₹100</b> <i /> NON-IEEE MEMBER <b>₹150</b></p></section>
+      <section className="section-shell" id="events">
+        <div className="section-heading"><p className="section-number">01 / SELECT A MISSION</p><h2>THE CASES</h2><p>Pick a side of the screen. Build your team. Enter the story.</p></div>
+        <div className="event-grid">
+          {events.map((event) => (
+            <Window title={`VISTAAR/${event.file}`} className="event-window" key={event.id}>
+              <div className="terminal">
+                <span className="terminal-dim">&gt; {event.eyebrow}</span>
+                <h3>{event.title}</h3>
+                <p>{event.description}</p>
+                <ul><li>TEAM: {event.team}</li><li>FEE: ₹{FEE_IEEE} IEEE / ₹{FEE_NON_IEEE} NON-IEEE, PER HEAD</li><li className="live">● REGISTRATIONS LIVE</li></ul>
+                <button className="pixel-button primary" type="button" onClick={() => openRegistration(event.id)}>REGISTER →</button>
+              </div>
+            </Window>
+          ))}
+        </div>
+      </section>
 
-      <section className="prize-section"><div className="section-shell prize-inner"><div><p className="section-number">02 / THE STAKES</p><h2>COME FOR<br /><em>THE CHAOS.</em></h2></div><div className="prize-amount"><span>₹</span>10,000<small>TOTAL PRIZE POOL</small></div></div></section>
+      <section className="section-shell" id="sessions">
+        <div className="section-heading"><p className="section-number">02 / LEVEL UP</p><h2>INDUSTRY SESSIONS</h2><p>Hear from people who do this for a living.</p></div>
+        <Window title="VISTAAR/SESSIONS.EXE" className="sessions-window">
+          <div className="terminal">
+            <ul className="session-list">{sessions.map((session) => <li key={session}>{session}</li>)}</ul>
+            <strong className="free-tag">(FREE TO REGISTER!)</strong>
+            <b className="cursor">_</b>
+          </div>
+        </Window>
+      </section>
 
-      <section className="details-section section-shell" id="details"><div className="section-heading"><p className="section-number">03 / FIELD NOTES</p><h2>THE BRIEFING</h2></div><div className="details-grid"><div className="briefing-card"><span className="briefing-label">MISSION DATE</span><strong>13<span>TH</span> OCTOBER 2026</strong><p>Mark the date. The clock starts at check-in.</p></div><div className="briefing-card"><span className="briefing-label">TEAM PROTOCOL</span><strong>01—04 <span>PLAYERS</span></strong><p>CTF: 1-4 members<br />Cyber Heist (Murder Mystery): 2-4 members</p></div><div className="briefing-card"><span className="briefing-label">LOCATION</span><strong>KLE TECHNOLOGICAL<br />UNIVERSITY</strong><p>Belgaum campus. Venue details will be shared after registration.</p></div></div></section>
+      <section className="section-shell" id="details">
+        <div className="section-heading"><p className="section-number">03 / FIELD NOTES</p><h2>THE BRIEFING</h2></div>
+        <div className="details-grid">
+          <Window title="MISSION_DATE"><strong className="brief-value">13<sup>TH</sup> OCT 2026</strong><p>Mark the date. The clock starts at check-in.</p></Window>
+          <Window title="TEAM_PROTOCOL"><strong className="brief-value">01—04 PLAYERS</strong><p>CTF: 1-4 members<br />Cyber Heist (Murder Mystery): 2-4 members</p></Window>
+          <Window title="LOCATION"><strong className="brief-value">KLE TECH, BELGAUM</strong><p>Venue details will be shared after registration.</p></Window>
+        </div>
+      </section>
 
-      <section className="faq-section section-shell" id="faq"><div className="faq-intro"><p className="section-number">04 / INTEL</p><h2>QUESTIONS?<br /><em>DECRYPTED.</em></h2><p>Everything you need before you enter the room.</p></div><div className="faq-list">{faqs.map(([question, answer], index) => <div className={`faq-item ${openFaq === index ? 'open' : ''}`} key={question}><button type="button" onClick={() => setOpenFaq(openFaq === index ? null : index)}><span>0{index + 1}</span>{question}<b>{openFaq === index ? '−' : '+'}</b></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
+      <section className="section-shell" id="faq">
+        <div className="section-heading"><p className="section-number">04 / INTEL</p><h2>HELP.TXT</h2><p>Everything you need before you enter the room.</p></div>
+        <Window title="HELP — FREQUENTLY ASKED" className="faq-window">
+          {faqs.map(([question, answer], index) => (
+            <div className={`faq-item ${openFaq === index ? 'open' : ''}`} key={question}>
+              <button type="button" aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? null : index)}><span>0{index + 1}</span>{question}<b>{openFaq === index ? '−' : '+'}</b></button>
+              {openFaq === index && <p>{answer}</p>}
+            </div>
+          ))}
+        </Window>
+      </section>
 
-      <footer className="footer"><div><span className="brand-mark">✦</span><strong>VISTAAR<span>.</span></strong><p>IEEE KLE • COMPUTER SOCIETY</p></div><div className="contact"><span>CONTACT HQ</span><a href="mailto:ieeecs@kletech.ac.in">ieeecs@kletech.ac.in</a><a href="tel:+919999999999">+91 99999 99999</a></div><div className="footer-end">END OF TRANSMISSION<br /><span>© 2026 IEEE KLE</span></div></footer>
+      <footer className="footer">
+        <div className="patrons-window">
+          <div className="patrons-titlebar"><span className="dots" aria-hidden="true"><i /><i /><i /></span><span className="window-controls" aria-hidden="true"><i>_</i><i>×</i></span></div>
+          <div className="patrons">{patrons.map(([name, role]) => <div key={name}><strong>{name}</strong><span>{role}</span></div>)}</div>
+        </div>
+        <div className="footer-bar">
+          <span className="pixel-logo">VISTAAR</span>
+          <div className="contact"><span>CONTACT HQ</span><a href="mailto:ieeecs@kletech.ac.in">ieeecs@kletech.ac.in</a><a href="tel:+919999999999">+91 99999 99999</a></div>
+          <span className="footer-end">END OF TRANSMISSION_<br />© 2026 IEEE KLE</span>
+        </div>
+      </footer>
 
-      {activeEvent && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setActiveEvent(null)}><div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="registration-title"><button className="close-button" type="button" onClick={() => setActiveEvent(null)} aria-label="Close registration">×</button>{submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="section-number">TRANSMISSION RECEIVED</p><h2>YOU'RE ON THE LIST.</h2><p>Your registration has reached the Vistaar control room. Venue details will be shared with your team leader.</p><button className="primary-button" type="button" onClick={() => setActiveEvent(null)}>BACK TO HQ</button></div> : <><p className="section-number">REGISTRATION / {activeEventData.title.toUpperCase()}</p><h2 id="registration-title">BUILD YOUR TEAM<span>.</span></h2><p className="modal-subtitle">{payment ? 'Scan the QR or tap Pay, then enter the UTR from your payment app.' : "Fill in the team leader's details. Add teammates below."}</p><form onSubmit={submitRegistration}><div className="form-step" hidden={Boolean(payment)}><label>TEAM NAME<input name="teamName" required placeholder="e.g. Byte Bandits" /></label><label>LEADER NAME<input name="leaderName" required placeholder="Your full name" /></label><div className="form-row"><label>EMAIL<input type="email" name="email" required placeholder="you@example.com" /></label><label>CONTACT NUMBER<input type="tel" name="contact" required placeholder="+91" /></label></div><div className="form-row"><label>IEEE MEMBERSHIP ID <span>(OPTIONAL)</span><input name="membershipId" placeholder="If applicable" /></label><label>COLLEGE<select name="college" defaultValue="" required><option value="" disabled>Select your college</option><option>KLE Technological University</option><option>Other college</option><option>Other</option></select></label></div><div className="member-count"><div><span className="briefing-label">TEAM MEMBERS</span><p>{activeEvent === 'murder' ? 'Cyber Heist (Murder Mystery) requires 2-4 members.' : 'CTF allows 1-4 members.'}</p></div><div className="stepper"><button type="button" onClick={() => setMemberCount(Math.max(minimumMembers, memberCount - 1))}>−</button><strong>{memberCount}</strong><button type="button" onClick={() => setMemberCount(Math.min(4, memberCount + 1))}>+</button></div></div>{Array.from({ length: memberCount - 1 }).map((_, index) => <div className="teammate-row" key={index}><span>MEMBER 0{index + 2}</span><input name={`member-${index + 2}-name`} required placeholder="Full name" /><input type="email" name={`member-${index + 2}-email`} required placeholder="Email" /><input name={`member-${index + 2}-membershipId`} placeholder="IEEE ID (optional)" /></div>)}</div>{payment && (UPI_ID && UPI_PAYEE_NAME ? <div className="payment-step"><div className="payment-card"><div className="payment-qr"><QRCodeSVG value={buildUpiUri(payment.amount, payment.note)} size={150} level="M" /></div><div className="payment-details"><span className="briefing-label">AMOUNT DUE</span><strong>₹{payment.amount}</strong><p>Pay to <b>{UPI_PAYEE_NAME}</b><br /><code>{UPI_ID}</code></p><p className="payment-hint">IEEE members ₹{FEE_IEEE} · Others ₹{FEE_NON_IEEE} per person</p><a className="card-button" href={buildUpiUri(payment.amount, payment.note)}>PAY VIA UPI APP <span>→</span></a></div></div><label>UTR / REFERENCE NUMBER<input name="utrNumber" required inputMode="numeric" pattern="\d{12}" title="The 12-digit UTR / UPI reference number from your payment app" placeholder="e.g. 302411223344" /></label><label>PAYMENT SCREENSHOT<input type="file" name="screenshot" accept="image/*" required /><span>Shared with the organizers to verify your payment.</span></label></div> : <p className="form-error" role="alert">Payments are not configured yet. Please contact the organizers.</p>)}{submitError && <p className="form-error" role="alert">{submitError}</p>}<div className="form-actions">{payment && <button className="back-button" type="button" onClick={() => setPayment(null)} disabled={submitting}>← EDIT TEAM</button>}<button className="submit-button" type="submit" disabled={submitting || (payment && !(UPI_ID && UPI_PAYEE_NAME))}>{submitting ? 'TRANSMITTING…' : payment ? <>SUBMIT REGISTRATION <span>↗</span></> : <>PROCEED TO PAYMENT <span>→</span></>}</button></div></form></>}</div></div>}
+      {activeEvent && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setActiveEvent(null)}><div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="registration-title"><Window title={`REGISTER/${activeEventData.file}`} onClose={() => setActiveEvent(null)}>{submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="section-number">TRANSMISSION RECEIVED</p><h2>YOU'RE ON THE LIST.</h2><p>Your registration has reached the Vistaar control room. Venue details will be shared with your team leader.</p><button className="pixel-button primary" type="button" onClick={() => setActiveEvent(null)}>BACK TO HQ</button></div> : <><p className="section-number">REGISTRATION / {activeEventData.title.toUpperCase()}</p><h2 id="registration-title">BUILD YOUR TEAM<span>.</span></h2><p className="modal-subtitle">{payment ? 'Scan the QR or tap Pay, then enter the UTR from your payment app.' : "Fill in the team leader's details. Add teammates below."}</p><form onSubmit={submitRegistration}><div className="form-step" hidden={Boolean(payment)}><label>TEAM NAME<input name="teamName" required placeholder="e.g. Byte Bandits" /></label><label>LEADER NAME<input name="leaderName" required placeholder="Your full name" /></label><div className="form-row"><label>EMAIL<input type="email" name="email" required placeholder="you@example.com" /></label><label>CONTACT NUMBER<input type="tel" name="contact" required placeholder="+91" /></label></div><div className="form-row"><label>IEEE MEMBERSHIP ID <span>(OPTIONAL)</span><input name="membershipId" placeholder="If applicable" /></label><label>COLLEGE<select name="college" defaultValue="" required><option value="" disabled>Select your college</option><option>KLE Technological University</option><option>Other college</option><option>Other</option></select></label></div><div className="member-count"><div><span className="field-label">TEAM MEMBERS</span><p>{activeEvent === 'murder' ? 'Cyber Heist (Murder Mystery) requires 2-4 members.' : 'CTF allows 1-4 members.'}</p></div><div className="stepper"><button type="button" onClick={() => setMemberCount(Math.max(minimumMembers, memberCount - 1))}>−</button><strong>{memberCount}</strong><button type="button" onClick={() => setMemberCount(Math.min(4, memberCount + 1))}>+</button></div></div>{Array.from({ length: memberCount - 1 }).map((_, index) => <div className="teammate-row" key={index}><span>MEMBER 0{index + 2}</span><input name={`member-${index + 2}-name`} required placeholder="Full name" /><input type="email" name={`member-${index + 2}-email`} required placeholder="Email" /><input name={`member-${index + 2}-membershipId`} placeholder="IEEE ID (optional)" /></div>)}</div>{payment && (UPI_ID && UPI_PAYEE_NAME ? <div className="payment-step"><div className="payment-card"><div className="payment-qr"><QRCodeSVG value={buildUpiUri(payment.amount, payment.note)} size={150} level="M" /></div><div className="payment-details"><span className="field-label">AMOUNT DUE</span><strong>₹{payment.amount}</strong><p>Pay to <b>{UPI_PAYEE_NAME}</b><br /><code>{UPI_ID}</code></p><p className="payment-hint">IEEE members ₹{FEE_IEEE} · Others ₹{FEE_NON_IEEE} per person</p><a className="pixel-button" href={buildUpiUri(payment.amount, payment.note)}>PAY VIA UPI APP <span>→</span></a></div></div><label>UTR / REFERENCE NUMBER<input name="utrNumber" required inputMode="numeric" pattern="\d{12}" title="The 12-digit UTR / UPI reference number from your payment app" placeholder="e.g. 302411223344" /></label><label>PAYMENT SCREENSHOT<input type="file" name="screenshot" accept="image/*" required /><span>Shared with the organizers to verify your payment.</span></label></div> : <p className="form-error" role="alert">Payments are not configured yet. Please contact the organizers.</p>)}{submitError && <p className="form-error" role="alert">{submitError}</p>}<div className="form-actions">{payment && <button className="pixel-button" type="button" onClick={() => setPayment(null)} disabled={submitting}>← EDIT TEAM</button>}<button className="pixel-button primary" type="submit" disabled={submitting || (payment && !(UPI_ID && UPI_PAYEE_NAME))}>{submitting ? 'TRANSMITTING…' : payment ? <>SUBMIT REGISTRATION <span>↗</span></> : <>PROCEED TO PAYMENT <span>→</span></>}</button></div></form></>}</Window></div></div>}
     </main>
   )
 }
