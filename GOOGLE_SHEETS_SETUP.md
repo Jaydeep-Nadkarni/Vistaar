@@ -58,3 +58,8 @@ The sheet stores `Amount Paid` and `UTR`; match UTRs against your bank/UPI state
 The screenshot is compressed in the browser (JPEG, max 1600px) and saved to the **Vistaar Payment Screenshots**
 Drive folder next to the sheet; the row's `Payment Screenshot` column links to it. The files stay private
 to the sheet owner — share the folder with other organizers who need to verify payments.
+
+## Industry sessions (free)
+The **Register free** button in the Industry Sessions section opens a separate individual form
+(name, email, contact, IEEE ID, college, AIML / Cybersecurity) with no payment step. Sign-ups go to an
+**Industry Sessions** tab, created automatically on the first one.

@@ -103,6 +103,11 @@ main { background-color: var(--paper); background-image: radial-gradient(rgba(60
 .sessions-window .window-body { padding: 14px; }
 .session-list { margin: 0 0 14px; padding-left: 22px; font-size: 26px; }
 .free-tag { font-size: 18px; }
+.sessions-window .pixel-button { align-self: flex-start; margin-top: 16px; }
+.session-picks { border: 2px dashed var(--shade); margin: 0; padding: 12px 14px 14px; display: flex; gap: 24px; flex-wrap: wrap; }
+.session-picks legend { padding: 0 6px; }
+label.check { flex-direction: row; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+label.check input { width: 20px; height: 20px; accent-color: var(--gold); box-shadow: none; }
 
 /* Briefing */
 .details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }

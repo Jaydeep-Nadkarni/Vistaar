@@ -3,6 +3,7 @@
  * Paste this into Extensions > Apps Script of the target sheet, run `authorizeDrive` once, then Deploy as a Web App.
  * Each event (CTF, Cyber Heist) gets its own tab, created automatically on the first registration.
  * Screenshots go into a "Vistaar Payment Screenshots" folder created next to the sheet.
+ * Free industry-session sign-ups (type: 'session') skip payment and land in their own "Industry Sessions" tab.
  */
 
 const HEADERS = [
@@ -11,11 +12,14 @@ const HEADERS = [
   'Member 3 Name', 'Member 3 Email', 'Member 3 IEEE ID',
   'Member 4 Name', 'Member 4 Email', 'Member 4 IEEE ID',
 ]
+const SESSION_HEADERS = ['Timestamp', 'Name', 'Email', 'Contact', 'IEEE ID', 'College', 'Sessions']
+const SESSION_SHEET_NAME = 'Industry Sessions'
 const SCREENSHOT_FOLDER_NAME = 'Vistaar Payment Screenshots'
 
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents)
+    if (data.type === 'session') return registerSession(data)
     const utr = String(data.utrNumber || '').trim()
     if (!/^\d{12}$/.test(utr)) throw new Error('A valid 12-digit UTR is required.')
     if (!String(data.screenshot || '').startsWith('data:image/')) throw new Error('A payment screenshot is required.')
@@ -31,17 +35,27 @@ function doPost(e) {
       row.push(data[`member-${member}-name`] || '', data[`member-${member}-email`] || '', data[`member-${member}-membershipId`] || '')
     }
 
-    // Serialize writes so two simultaneous submissions can't land on the same row.
-    const lock = LockService.getScriptLock()
-    lock.waitLock(10000)
-    try {
-      getEventSheet(data.event).appendRow(row)
-    } finally {
-      lock.releaseLock()
-    }
+    appendRow(data.event || 'Registrations', HEADERS, row)
     return json({ status: 'success' })
   } catch (error) {
     return json({ status: 'error', message: String(error) })
+  }
+}
+
+function registerSession(data) {
+  if (!data.name || !data.email || !data.sessions) throw new Error('Name, email and at least one session are required.')
+  appendRow(SESSION_SHEET_NAME, SESSION_HEADERS, [new Date(), data.name, data.email, data.contact, data.membershipId || '', data.college, data.sessions])
+  return json({ status: 'success' })
+}
+
+// Serialize writes so two simultaneous submissions can't land on the same row.
+function appendRow(sheetName, headers, row) {
+  const lock = LockService.getScriptLock()
+  lock.waitLock(10000)
+  try {
+    getSheet(sheetName, headers).appendRow(row)
+  } finally {
+    lock.releaseLock()
   }
 }
 
@@ -82,12 +96,11 @@ function getScreenshotFolder() {
   return folder
 }
 
-function getEventSheet(eventName) {
+function getSheet(name, headers) {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
-  const name = eventName || 'Registrations'
   const sheet = spreadsheet.getSheetByName(name) || spreadsheet.insertSheet(name)
-  // Rewriting the header row every time keeps it in sync when columns are added to HEADERS.
-  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold')
+  // Rewriting the header row every time keeps it in sync when columns are added.
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight('bold')
   sheet.setFrozenRows(1)
   return sheet
 }
