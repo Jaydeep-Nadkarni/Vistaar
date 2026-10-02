@@ -109,12 +109,19 @@ main { background-color: var(--paper); background-image: radial-gradient(rgba(60
 label.check { flex-direction: row; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
 label.check input { width: 20px; height: 20px; accent-color: var(--gold); box-shadow: none; }
 
-/* Briefing */
+/* Timeline */
 .details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
 .brief-value { font: 700 22px/1.2 var(--pixel); display: block; overflow-wrap: anywhere; }
 .brief-value sup { font-size: 12px; }
 .brief-sub { display: block; font-size: 15px; margin-top: 8px; line-height: 1.4; }
 .details-grid p { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 14px 0 0; }
+.timeline-window .window-body { padding: 12px 22px 18px; }
+.timeline { display: grid; }
+.timeline-row { display: grid; grid-template-columns: minmax(130px, .35fr) 1fr; gap: 26px; align-items: center; padding: 19px 0; border-bottom: 2px dashed var(--shade); }
+.timeline-row:last-child { border-bottom: 0; }
+.timeline-row time { color: var(--gold-dark); font: 700 clamp(18px, 2.4vw, 29px) var(--pixel); letter-spacing: .02em; }
+.timeline-row strong { display: block; font: 700 clamp(15px, 2vw, 21px) var(--pixel); }
+.timeline-row span { display: block; color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 7px; }
 
 /* FAQ */
 .faq-window .window-body { padding: 6px 20px; }

@@ -11,7 +11,7 @@ const sessions = ['AIML', 'Cybersecurity']
 
 const patrons = [
   ['Dr. Santosh Pattar', 'Computer Society Faculty Advisor'],
-  ['Nalini Karchi', 'IEEE Branch Counselor'],
+  ['Dr. Nalini Karchi', 'IEEE Branch Counselor'],
   ['Dr. Rajashri Khanai', 'HoD CSE'],
   ['Dr. S.F. Patil', 'Principal'],
 ]
@@ -19,8 +19,9 @@ const patrons = [
 const faqs = [
   ['What is the fee?', 'IEEE members pay ₹100. Non-IEEE members pay ₹150.'],
   ['Can I participate solo?', 'CTF accepts solo players. Cyber Heist (Murder Mystery) needs at least 2 members.'],
-  ['Where will it happen?', 'The event will take place at KLE Technological University, Belgaum.'],
-  ['What should I bring?', 'Bring your college ID and your sharpest problem-solving instincts.'],
+  ['Where will it happen?', 'The event will take place at KLE Technological University, Belagavi.'],
+  ['What should I bring?', 'Bring your college ID and your laptop is more than enough.'],
+  ['Will the lunch be provided?', 'Yes, lunch will be provided for all participants.']
 ]
 
 const SHEETS_URL = import.meta.env.VITE_SHEETS_URL
@@ -31,6 +32,7 @@ const CONTACTS = [
   { name: 'Karthik Hirenarti', phone: '+91 72044 04872', tel: '+917204404872' },
 ]
 const SOCIETY_MEMBERS = [
+  ['IEEE SB Chair', 'Harsh Othy'],
   ['Chair', 'Jaydeep Nadkarni'],
   ['Vice Chair', 'Kalash Rao'],
   ['Secretary', 'Sarvadnya Patil'],
@@ -291,12 +293,12 @@ function App() {
 
       <section className="hero" id="home">
         <div className="logo-strip"><img src="/logos.png" alt="IEEE Bangalore Section, IEEE NKSS, KLE Technological University, IEEE KLE Tech Student Branch, IEEE Computer Society, ACE Department of CSE" /></div>
-        <p className="kicker">KLE TECHNOLOGICAL UNIVERSITY, BELGAUM<br />IEEE STUDENT BRANCH</p>
+        <p className="kicker">KLE TECHNOLOGICAL UNIVERSITY, BELAGAVI<br />IEEE STUDENT BRANCH</p>
         <div className="kicker-rule" />
         <span className="sparkle sparkle-a" aria-hidden="true">✦</span>
         <span className="sparkle sparkle-b" aria-hidden="true">✛</span>
         <h1 className="pixel-title">VISTAAR</h1>
-        <div className="hero-tags"><span>TECHNICAL EVENTS</span><span>INDUSTRY SEMINARS</span></div>
+        <div className="hero-tags"><span>TECHNICAL EVENTS</span><span>INDUSTRY SESSIONS</span></div>
         <ScrollLink className="pixel-button primary hero-register" to="events">REGISTER</ScrollLink>
         <div className="hero-windows">
           <Window title="DATE" className="date-window">
@@ -309,7 +311,7 @@ function App() {
           </Window>
           <Window title="root@vistaar:~" className="terminal-window">
             <div className="terminal">
-              <span className="terminal-cmd">$ cat society_members.txt</span>
+              <span className="terminal-cmd">$ organizing_committee.txt</span>
               <dl className="society-members">
                 {SOCIETY_MEMBERS.map(([role, name]) => <div key={role}><dt>{role}</dt><dd>{name}</dd></div>)}
               </dl>
@@ -321,7 +323,7 @@ function App() {
       </section>
 
       <section className="section-shell" id="events">
-        <div className="section-heading"><p className="section-number">01 / SELECT A MISSION</p><h2>THE CASES</h2><p>Pick a side of the screen. Build your team. Enter the story.</p></div>
+        <div className="section-heading"><p className="section-number">01 / Participate and win</p><h2>Technical Evnets</h2><p>Pick a side of the screen. Build your team. Enter the story.</p></div>
         <div className="event-grid">
           {events.map((event) => (
             <Window title={`VISTAAR/${event.file}`} className="event-window" key={event.id}>
@@ -338,7 +340,7 @@ function App() {
       </section>
 
       <section className="section-shell" id="sessions">
-        <div className="section-heading"><p className="section-number">02 / LEVEL UP</p><h2>INDUSTRY SESSIONS</h2><p>Hear from people who do this for a living.</p></div>
+        <div className="section-heading"><p className="section-number">02 / LEVEL UP</p><h2>INDUSTRY SESSIONS</h2><p>Hear from the top industry experts.</p></div>
         <Window title="VISTAAR/SESSIONS.EXE" className="sessions-window">
           <div className="terminal">
             <ul className="session-list">{sessions.map((session) => <li key={session}>{session}</li>)}</ul>
@@ -349,12 +351,16 @@ function App() {
       </section>
 
       <section className="section-shell" id="details">
-        <div className="section-heading"><p className="section-number">03 / FIELD NOTES</p><h2>THE BRIEFING</h2></div>
-        <div className="details-grid">
-          <Window title="MISSION_DATE"><strong className="brief-value">13<sup>TH</sup> OCT 2026</strong><p>Mark the date. The clock starts at check-in.</p></Window>
-          <Window title="TEAM_PROTOCOL"><strong className="brief-value">01—04 PLAYERS</strong><p>CTF: 1-4 members<br />Cyber Heist (Murder Mystery): 2-4 members</p></Window>
-          <Window title="LOCATION"><strong className="brief-value">KLE Technological University<br /><span className="brief-sub">Dr.&nbsp;M.&nbsp;S.&nbsp;Sheshgiri Campus, Belagavi</span></strong><p>Venue details will be shared after registration.</p></Window>
-        </div>
+        <div className="section-heading"><p className="section-number">03 / EVENT DAY</p><h2>THE TIMELINE</h2><p>13 October 2026 • KLE Technological University, Belgaum</p></div>
+        <Window title="VISTAAR/TIMELINE.EXE" className="timeline-window">
+          <div className="timeline">
+            <div className="timeline-row"><time>08:30</time><div><strong>REGISTRATION STARTS</strong><span>Check in, assemble your team.</span></div></div>
+            <div className="timeline-row"><time>09:30</time><div><strong>CS CHAPTER INAUGURATION</strong><span>The official opening of Vistaar.</span></div></div>
+            <div className="timeline-row"><time>10:30—12:30</time><div><strong>KEYNOTE SESSIONS</strong><span>Listen, learn, and get ready for the missions ahead.</span></div></div>
+            <div className="timeline-row"><time>12:30—13:30</time><div><strong>LUNCH BREAK</strong><span>Recharge before the technical events begin.</span></div></div>
+            <div className="timeline-row"><time>13:30—15:30</time><div><strong>TECHNICAL EVENTS</strong><span>CTF and Cyber Heist (Murder Mystery) go live.</span></div></div>
+          </div>
+        </Window>
       </section>
 
       <section className="section-shell" id="faq">
@@ -376,14 +382,14 @@ function App() {
         </div>
         <div className="footer-bar">
           <span className="pixel-logo">VISTAAR</span>
-          <div className="contact"><span>CONTACT HQ</span>{CONTACTS.map(({ name, phone, tel }) => <a className="contact-person" href={`tel:${tel}`} key={tel}><strong>{name}</strong><em>{phone}</em></a>)}</div>
-          <span className="footer-end">END OF TRANSMISSION_<br />© 2026 IEEE KLE</span>
+          <div className="contact"><span>CONTACT</span>{CONTACTS.map(({ name, phone, tel }) => <a className="contact-person" href={`tel:${tel}`} key={tel}><strong>{name}</strong><em>{phone}</em></a>)}</div>
+          <span className="footer-end">Email<br />ieee@klescet.ac.in</span>
         </div>
       </footer>
 
       </>}
 
-      {activeEvent && <div className={isMobile ? 'register-page' : 'modal-backdrop'} role="presentation" onMouseDown={(event) => !isMobile && event.target === event.currentTarget && closeRegistration()}><div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="registration-title"><Window title={`REGISTER/${activeEventData.file}`} onClose={() => closeRegistration()}>{submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="section-number">TRANSMISSION RECEIVED</p><h2>YOU'RE ON THE LIST.</h2><p>Your registration has reached the Vistaar control room. Venue details will be shared with your team leader.</p><button className="pixel-button primary" type="button" onClick={() => closeRegistration()}>BACK TO HQ</button></div> : <><p className="section-number">REGISTRATION / {activeEventData.title.toUpperCase()}</p><h2 id="registration-title">BUILD YOUR TEAM<span>.</span></h2><p className="modal-subtitle">{payment ? 'Scan the QR or tap Pay, then enter the UTR from your payment app.' : "Fill in the team leader's details. Add teammates below."}</p><form onSubmit={submitRegistration}><div className="form-step" hidden={Boolean(payment)}><label>TEAM NAME<input name="teamName" required placeholder="e.g. Byte Bandits" /></label><label>LEADER NAME<input name="leaderName" required placeholder="Your full name" /></label><div className="form-row"><label>EMAIL<input type="email" name="email" required placeholder="you@example.com" /></label><label>CONTACT NUMBER<input type="tel" name="contact" required placeholder="+91" /></label></div><div className="form-row"><label>IEEE MEMBERSHIP ID <span>(OPTIONAL)</span><input name="membershipId" placeholder="If applicable" /></label><label>COLLEGE<CollegeInput /></label></div><div className="member-count"><div><span className="field-label">TEAM MEMBERS</span><p>{activeEvent === 'murder' ? 'Cyber Heist (Murder Mystery) requires 2-4 members.' : 'CTF allows 1-4 members.'}</p></div><div className="stepper"><button type="button" onClick={() => setMemberCount(Math.max(minimumMembers, memberCount - 1))}>−</button><strong>{memberCount}</strong><button type="button" onClick={() => setMemberCount(Math.min(4, memberCount + 1))}>+</button></div></div>{Array.from({ length: memberCount - 1 }).map((_, index) => <div className="teammate-row" key={index}><span>MEMBER 0{index + 2}</span><input name={`member-${index + 2}-name`} required placeholder="Full name" /><input type="email" name={`member-${index + 2}-email`} required placeholder="Email" /><input name={`member-${index + 2}-membershipId`} placeholder="IEEE ID" title="IEEE membership ID (optional)" /></div>)}</div>{payment && (UPI_ID && UPI_PAYEE_NAME ? <div className="payment-step"><div className="payment-card"><div className="payment-qr"><QRCodeSVG value={buildUpiUri(payment.amount, payment.note)} size={150} level="M" /></div><div className="payment-details"><span className="field-label">AMOUNT DUE</span><strong>₹{payment.amount}</strong><p>Pay to <b>{UPI_PAYEE_NAME}</b><br /><code>{UPI_ID}</code></p><p className="payment-hint">IEEE members ₹{FEE_IEEE} · Others ₹{FEE_NON_IEEE} per person</p><a className="pixel-button" href={buildUpiUri(payment.amount, payment.note)}>PAY VIA UPI APP <span>→</span></a></div></div><label>UTR / REFERENCE NUMBER<input name="utrNumber" required inputMode="numeric" pattern="\d{12}" title="The 12-digit UTR / UPI reference number from your payment app" placeholder="e.g. 302411223344" /></label><label>PAYMENT SCREENSHOT<input type="file" name="screenshot" accept="image/*" required /><span>Shared with the organizers to verify your payment.</span></label></div> : <p className="form-error" role="alert">Payments are not configured yet. Please contact the organizers.</p>)}{submitError && <p className="form-error" role="alert">{submitError}</p>}<div className="form-actions">{payment && <button className="pixel-button" type="button" onClick={() => setPayment(null)} disabled={submitting}>← EDIT TEAM</button>}<button className="pixel-button primary" type="submit" disabled={submitting || (payment && !(UPI_ID && UPI_PAYEE_NAME))}>{submitting ? 'TRANSMITTING…' : payment ? <>SUBMIT REGISTRATION <span>↗</span></> : <>PROCEED TO PAYMENT <span>→</span></>}</button></div></form></>}</Window></div></div>}
+      {activeEvent && <div className={isMobile ? 'register-page' : 'modal-backdrop'} role="presentation" onMouseDown={(event) => !isMobile && event.target === event.currentTarget && closeRegistration()}><div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="registration-title"><Window title={`REGISTER/${activeEventData.file}`} onClose={() => closeRegistration()}>{submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="section-number">TRANSMISSION RECEIVED</p><h2>YOU'RE ON THE LIST.</h2><p>Your registration has reached the Vistaar control room. Venue details will be shared with your team leader.</p><button className="pixel-button primary" type="button" onClick={() => closeRegistration()}>BACK TO HQ</button></div> : <><p className="section-number">REGISTRATION / {activeEventData.title.toUpperCase()}</p><h2 id="registration-title">BUILD YOUR TEAM<span>.</span></h2><p className="modal-subtitle">{payment ? 'Scan the QR or tap Pay, then enter the UTR from your payment app.' : "Fill in the team leader's details. Add teammates below."}</p><form onSubmit={submitRegistration}><div className="form-step" hidden={Boolean(payment)}><label>TEAM NAME<input name="teamName" required placeholder="Your Team Name" /></label><label>LEADER NAME<input name="leaderName" required placeholder="Your full name" /></label><div className="form-row"><label>EMAIL<input type="email" name="email" required placeholder="Your Email" /></label><label>CONTACT NUMBER<input type="tel" name="contact" required placeholder="+91" /></label></div><div className="form-row"><label>IEEE MEMBERSHIP ID <span>(OPTIONAL)</span><input name="membershipId" placeholder="If applicable" /></label><label>COLLEGE<CollegeInput /></label></div><div className="member-count"><div><span className="field-label">TEAM MEMBERS</span><p>{activeEvent === 'murder' ? 'Cyber Heist (Murder Mystery) requires 2-4 members.' : 'CTF allows 1-4 members.'}</p></div><div className="stepper"><button type="button" onClick={() => setMemberCount(Math.max(minimumMembers, memberCount - 1))}>−</button><strong>{memberCount}</strong><button type="button" onClick={() => setMemberCount(Math.min(4, memberCount + 1))}>+</button></div></div>{Array.from({ length: memberCount - 1 }).map((_, index) => <div className="teammate-row" key={index}><span>MEMBER 0{index + 2}</span><input name={`member-${index + 2}-name`} required placeholder="Full name" /><input type="email" name={`member-${index + 2}-email`} required placeholder="Email" /><input name={`member-${index + 2}-membershipId`} placeholder="IEEE ID" title="IEEE membership ID (optional)" /></div>)}</div>{payment && (UPI_ID && UPI_PAYEE_NAME ? <div className="payment-step"><div className="payment-card"><div className="payment-qr"><QRCodeSVG value={buildUpiUri(payment.amount, payment.note)} size={150} level="M" /></div><div className="payment-details"><span className="field-label">AMOUNT DUE</span><strong>₹{payment.amount}</strong><p>Pay to <b>{UPI_PAYEE_NAME}</b><br /><code>{UPI_ID}</code></p><p className="payment-hint">IEEE members ₹{FEE_IEEE} · Others ₹{FEE_NON_IEEE} per person</p><a className="pixel-button" href={buildUpiUri(payment.amount, payment.note)}>PAY VIA UPI APP <span>→</span></a></div></div><label>UTR / REFERENCE NUMBER<input name="utrNumber" required inputMode="numeric" pattern="\d{12}" title="The 12-digit UTR / UPI reference number from your payment app" placeholder="e.g. 302411223344" /></label><label>PAYMENT SCREENSHOT<input type="file" name="screenshot" accept="image/*" required /><span>Shared with the organizers to verify your payment.</span></label></div> : <p className="form-error" role="alert">Payments are not configured yet. Please contact the organizers.</p>)}{submitError && <p className="form-error" role="alert">{submitError}</p>}<div className="form-actions">{payment && <button className="pixel-button" type="button" onClick={() => setPayment(null)} disabled={submitting}>← EDIT TEAM</button>}<button className="pixel-button primary" type="submit" disabled={submitting || (payment && !(UPI_ID && UPI_PAYEE_NAME))}>{submitting ? 'TRANSMITTING…' : payment ? <>SUBMIT REGISTRATION <span>↗</span></> : <>PROCEED TO PAYMENT <span>→</span></>}</button></div></form></>}</Window></div></div>}
       {sessionOpen && <SessionRegistration onClose={closeRegistration} isMobile={isMobile} />}
     </main>
   )
