@@ -319,7 +319,7 @@ function App() {
             </div>
           </Window>
         </div>
-        <ScrollLink className="pixel-button primary" to="events">CHOOSE YOUR CASE →</ScrollLink>
+        <ScrollLink className="pixel-button primary" to="events">CHOOSE YOUR EVENT →</ScrollLink>
         <p className="motto">CODE <i /> COLLABORATE <i /> CREATE <i /> BEYOND</p>
       </section>
 
