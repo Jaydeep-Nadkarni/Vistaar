@@ -10,8 +10,9 @@ No API key, Google Cloud project, or billing is needed — only the Web App URL.
 1. In the sheet: **Extensions → Apps Script**.
 2. Delete the sample code in `Code.gs` and paste the contents of `google-apps-script/Code.gs` from this repo.
 3. Click **Save** (disk icon).
-4. In the function dropdown at the top (next to **Debug**), pick **authorizeDrive** and click **Run**.
-   Allow access when asked. This lets the script save payment screenshots to your Drive and creates
+4. In the function dropdown at the top (next to **Debug**), pick **authorize** and click **Run**.
+   Allow access when asked. This lets the script save payment screenshots to your Drive, send confirmation
+   emails from your account, and creates
    a **Vistaar Payment Screenshots** folder next to the sheet.
 
 ## 3. Deploy as a Web App
@@ -63,3 +64,25 @@ to the sheet owner — share the folder with other organizers who need to verify
 The **Register free** button in the Industry Sessions section opens a separate individual form
 (name, email, contact, IEEE ID, college, AIML / Cybersecurity) with no payment step. Sign-ups go to an
 **Industry Sessions** tab, created automatically on the first one.
+
+## Confirmation emails
+Every registration (team or industry session) immediately emails a confirmation to everyone on it: the
+leader and all teammates in one message, with the event, team, amount, UTR and the WhatsApp group button.
+It is sent from the Google account that deployed the script (**Execute as: Me**), so deploy from the
+college Workspace account you want emails to come from. Replies go back to that inbox.
+
+- Workspace accounts can email about 1,500 recipients per day from Apps Script.
+- The **Email Status** column on each row shows `Sent to N`, `Not sent: daily quota reached`, or the
+  error. A failed email never blocks the registration; follow those rows up manually.
+- After pasting the updated script, run **authorize** once more to grant the email permission, then
+  **Deploy → Manage deployments → ✏️ Edit → New version**.
+
+## WhatsApp groups
+Each event has its own group. Add the invite links to `.env.local` (and to your host's env vars), then restart / redeploy:
+```
+VITE_WHATSAPP_CTF=https://chat.whatsapp.com/...
+VITE_WHATSAPP_CYBER_HEIST=https://chat.whatsapp.com/...
+VITE_WHATSAPP_SESSIONS=https://chat.whatsapp.com/...
+```
+A **JOIN WHATSAPP GROUP** button appears on the success screen after registering, and the same link is put
+in the confirmation email. If a link is missing, the button and the email section are hidden.

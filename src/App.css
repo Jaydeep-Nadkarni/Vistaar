@@ -196,6 +196,8 @@ input[type=file] { padding: 8px; cursor: pointer; }
 .form-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
 .success-state { text-align: center; padding: 30px 10px 14px; }
 .success-state > p:not(.section-number) { color: var(--muted); font-size: 13px; line-height: 1.6; max-width: 400px; margin: 0 auto 26px; }
+.success-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.pixel-button.whatsapp { background: #25d366; box-shadow: inset -2px -2px 0 #1a9e4b, inset 2px 2px 0 #6ee59a, 4px 4px 0 var(--ink); }
 .success-mark { width: 60px; height: 60px; border: 2px solid var(--ink); background: var(--gold); box-shadow: 4px 4px 0 var(--ink); display: grid; place-items: center; font: 700 28px var(--pixel); margin: 0 auto 24px; }
 
 @media (max-width: 860px) {
