@@ -297,7 +297,7 @@ function App() {
         <span className="sparkle sparkle-b" aria-hidden="true">✛</span>
         <h1 className="pixel-title">VISTAAR</h1>
         <div className="hero-tags"><span>TECHNICAL EVENTS</span><span>INDUSTRY SEMINARS</span></div>
-        <ScrollLink className="pixel-button primary hero-register" to="events">REGISTER ↗</ScrollLink>
+        <ScrollLink className="pixel-button primary hero-register" to="events">REGISTER</ScrollLink>
         <div className="hero-windows">
           <Window title="DATE" className="date-window">
             <strong>13<sup>TH</sup></strong>
