@@ -64,7 +64,7 @@ function Window({ title, className = '', onClose, children }) {
       <div className="window-titlebar">
         <span className="window-title">{title}</span>
         <span className="window-controls">
-          <i aria-hidden="true">_</i>
+          <i className="ctl-min" aria-hidden="true" />
           <i aria-hidden="true">□</i>
           {onClose ? <button type="button" onClick={onClose} aria-label="Close">×</button> : <i aria-hidden="true">×</i>}
         </span>
@@ -202,14 +202,13 @@ function App() {
       <header className="topbar">
         <div className="topbar-titlebar">
           <span className="window-title">VISTAAR.EXE — IEEE KLE TECH</span>
-          <span className="window-controls" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+          <span className="window-controls" aria-hidden="true"><i className="ctl-min" /><i>□</i><i>×</i></span>
         </div>
         <nav className="menubar" aria-label="Primary navigation">
           <a href="#events"><u>E</u>vents</a>
           <a href="#sessions"><u>S</u>essions</a>
           <a href="#details"><u>D</u>etails</a>
           <a href="#faq"><u>H</u>elp</a>
-          <a className="menubar-register" href="#events">REGISTER ↗</a>
         </nav>
       </header>
 
@@ -221,6 +220,7 @@ function App() {
         <span className="sparkle sparkle-b" aria-hidden="true">✛</span>
         <h1 className="pixel-title">VISTAAR</h1>
         <div className="hero-tags"><span>TECHNICAL EVENTS</span><span>INDUSTRY SEMINARS</span></div>
+        <a className="pixel-button primary hero-register" href="#events">REGISTER ↗</a>
         <div className="hero-windows">
           <Window title="DATE" className="date-window">
             <strong>13<sup>TH</sup></strong>
@@ -252,7 +252,7 @@ function App() {
                 <span className="terminal-dim">&gt; {event.eyebrow}</span>
                 <h3>{event.title}</h3>
                 <p>{event.description}</p>
-                <ul><li>TEAM: {event.team}</li><li>FEE: ₹{FEE_IEEE} IEEE / ₹{FEE_NON_IEEE} NON-IEEE, PER HEAD</li><li className="live">● REGISTRATIONS LIVE</li></ul>
+                <ul><li>TEAM: {event.team}</li><li>FEE: ₹{FEE_IEEE} IEEE / ₹{FEE_NON_IEEE} NON&#8209;IEEE, PER HEAD</li><li className="live">● REGISTRATIONS LIVE</li></ul>
                 <button className="pixel-button primary" type="button" onClick={() => openRegistration(event.id)}>REGISTER →</button>
               </div>
             </Window>
@@ -277,7 +277,7 @@ function App() {
         <div className="details-grid">
           <Window title="MISSION_DATE"><strong className="brief-value">13<sup>TH</sup> OCT 2026</strong><p>Mark the date. The clock starts at check-in.</p></Window>
           <Window title="TEAM_PROTOCOL"><strong className="brief-value">01—04 PLAYERS</strong><p>CTF: 1-4 members<br />Cyber Heist (Murder Mystery): 2-4 members</p></Window>
-          <Window title="LOCATION"><strong className="brief-value">KLE TECH, BELGAUM</strong><p>Venue details will be shared after registration.</p></Window>
+          <Window title="LOCATION"><strong className="brief-value">KLE Technological University<br /><span className="brief-sub">Dr.&nbsp;M.&nbsp;S.&nbsp;Sheshgiri Campus, Belagavi</span></strong><p>Venue details will be shared after registration.</p></Window>
         </div>
       </section>
 
@@ -295,7 +295,7 @@ function App() {
 
       <footer className="footer">
         <div className="patrons-window">
-          <div className="patrons-titlebar"><span className="dots" aria-hidden="true"><i /><i /><i /></span><span className="window-controls" aria-hidden="true"><i>_</i><i>×</i></span></div>
+          <div className="patrons-titlebar"><span className="dots" aria-hidden="true"><i /><i /><i /></span><span className="window-controls" aria-hidden="true"><i className="ctl-min" /><i>×</i></span></div>
           <div className="patrons">{patrons.map(([name, role]) => <div key={name}><strong>{name}</strong><span>{role}</span></div>)}</div>
         </div>
         <div className="footer-bar">
