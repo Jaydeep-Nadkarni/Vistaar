@@ -163,7 +163,7 @@ input:focus, select:focus { outline: 3px solid var(--gold); outline-offset: 1px;
 input[type=file] { padding: 8px; cursor: pointer; }
 .form-step { display: grid; gap: 18px; }
 .form-step[hidden] { display: none; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
 .field-label { font: 700 12px var(--pixel); color: var(--gold-dark); letter-spacing: .08em; }
 .member-count { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 2px dashed var(--shade); border-bottom: 2px dashed var(--shade); padding: 14px 0; }
 .member-count p { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
@@ -228,3 +228,6 @@ input[type=file] { padding: 8px; cursor: pointer; }
 .event-window li { position: relative; padding-left: 1.1em; }
 .event-window li:before { position: absolute; left: 0; }
 .event-window li.live { padding-left: 0; }
+.contact .contact-person { display: grid; gap: 2px; text-decoration: none; }
+.contact-person strong { font: 700 13px var(--pixel); letter-spacing: .04em; grid-column: 1; }
+.contact-person em { font: 700 13px var(--mono); font-style: normal; color: var(--gold-dark); margin-top: 3px; }
