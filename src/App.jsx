@@ -298,7 +298,7 @@ function App() {
 
       <section className="hero" id="home">
         <div className="logo-strip"><img src="/logos.png" alt="IEEE Bangalore Section, IEEE NKSS, KLE Technological University, IEEE KLE Tech Student Branch, IEEE Computer Society, ACE Department of CSE" /></div>
-        <p className="kicker">KLE TECHNOLOGICAL UNIVERSITY, BELAGAVI<br />IEEE STUDENT BRANCH</p>
+        <p className="kicker"><br />IEEE STUDENT BRANCH in collaboration with Department of Computer Science and Engineering and CSE(AI) in association with the IEEE Banglore Section</p>
         <div className="kicker-rule" />
         <span className="sparkle sparkle-a" aria-hidden="true">✦</span>
         <span className="sparkle sparkle-b" aria-hidden="true">✛</span>
