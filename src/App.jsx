@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import './App.css'
 
@@ -106,7 +106,7 @@ const CollegeInput = () => (
 )
 
 // Industry sessions are free and individual, so this form skips the team builder and the UPI step entirely.
-function SessionRegistration({ onClose }) {
+function SessionRegistration({ onClose, isMobile }) {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -129,7 +129,7 @@ function SessionRegistration({ onClose }) {
   }
 
   return (
-    <div className="register-page">
+    <div className={isMobile ? 'register-page' : 'modal-backdrop'} role="presentation" onMouseDown={(event) => !isMobile && event.target === event.currentTarget && onClose()}>
       <div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="session-title">
         <Window title="REGISTER/SESSIONS.EXE" onClose={onClose}>
           {submitted ? (
@@ -163,11 +163,16 @@ const Trophy = () => (
   </svg>
 )
 
-// Registration lives at /register/<event> so the browser's back button returns to the landing page.
+// On phones registration is its own page at /register/<event>, so the back button returns to the landing page.
+// On larger screens it stays a pop-up dialog and the URL does not change.
+const MOBILE_QUERY = '(max-width: 640px)'
 const getPath = () => window.location.pathname.replace(/\/+$/, '') || '/'
 
 function App() {
   const [path, setPath] = useState(getPath)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia(MOBILE_QUERY).matches)
+  const [dialogId, setDialogId] = useState(null)
+  const restoreScroll = useRef(null)
   const [memberCount, setMemberCount] = useState(1)
   const [openFaq, setOpenFaq] = useState(null)
   const [submitted, setSubmitted] = useState(false)
@@ -177,26 +182,42 @@ function App() {
 
   useEffect(() => {
     const onPop = (event) => {
+      restoreScroll.current = event.state?.scrollY ?? 0
       setPath(getPath())
-      window.requestAnimationFrame(() => window.scrollTo(0, event.state?.scrollY ?? 0))
     }
+    const media = window.matchMedia(MOBILE_QUERY)
+    const onMedia = (event) => setIsMobile(event.matches)
     window.addEventListener('popstate', onPop)
-    return () => window.removeEventListener('popstate', onPop)
+    media.addEventListener('change', onMedia)
+    return () => {
+      window.removeEventListener('popstate', onPop)
+      media.removeEventListener('change', onMedia)
+    }
   }, [])
 
-  const navigate = (to) => {
+  // After Back/Forward the matching page has just rendered; put the scroll position back before paint.
+  useLayoutEffect(() => {
+    if (restoreScroll.current === null) return
+    window.scrollTo({ top: restoreScroll.current, behavior: 'instant' })
+    restoreScroll.current = null
+  }, [path])
+
+  const openRegistration = (id) => {
+    if (!isMobile) return setDialogId(id)
+    const to = `/register/${id}`
     window.history.replaceState({ ...window.history.state, scrollY: window.scrollY }, '')
     window.history.pushState({ inApp: true }, '', to)
     setPath(to)
   }
   // Back when we pushed the page ourselves; a directly opened /register/... link falls back to home.
   const closeRegistration = () => {
+    if (!isMobile) return setDialogId(null)
     if (window.history.state?.inApp) return window.history.back()
     window.history.replaceState({}, '', '/')
     setPath('/')
   }
 
-  const routeId = path.startsWith('/register/') ? path.split('/')[2] : null
+  const routeId = isMobile ? (path.startsWith('/register/') ? path.split('/')[2] : null) : dialogId
   const sessionOpen = routeId === 'sessions'
   const activeEvent = events.some((event) => event.id === routeId) ? routeId : null
 
@@ -210,8 +231,16 @@ function App() {
 
   // Land at the top of the registration page once it has rendered.
   useEffect(() => {
-    if (activeEvent || sessionOpen) window.scrollTo(0, 0)
-  }, [activeEvent, sessionOpen])
+    if (!activeEvent && !sessionOpen) return undefined
+    if (isMobile) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      return undefined
+    }
+    // Pop-up dialog: keep the page behind it from scrolling.
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previous }
+  }, [activeEvent, sessionOpen, isMobile])
 
   const activeEventData = events.find((event) => event.id === activeEvent)
   const minimumMembers = activeEvent === 'murder' ? 2 : 1
@@ -250,7 +279,7 @@ function App() {
 
   return (
     <main>
-      {!activeEvent && !sessionOpen && <>
+      {!(isMobile && (activeEvent || sessionOpen)) && <>
       <header className="topbar">
         <nav className="menubar" aria-label="Primary navigation">
           <ScrollLink to="events"><u>E</u>vents</ScrollLink>
@@ -301,7 +330,7 @@ function App() {
                 <h3>{event.title}</h3>
                 <p>{event.description}</p>
                 <ul><li>TEAM: {event.team}</li><li>FEE: ₹{FEE_IEEE} IEEE / ₹{FEE_NON_IEEE} NON&#8209;IEEE, PER HEAD</li><li className="live">● REGISTRATIONS LIVE</li></ul>
-                <button className="pixel-button primary" type="button" onClick={() => navigate(`/register/${event.id}`)}>REGISTER →</button>
+                <button className="pixel-button primary" type="button" onClick={() => openRegistration(event.id)}>REGISTER →</button>
               </div>
             </Window>
           ))}
@@ -314,7 +343,7 @@ function App() {
           <div className="terminal">
             <ul className="session-list">{sessions.map((session) => <li key={session}>{session}</li>)}</ul>
             <strong className="free-tag">(FREE TO REGISTER!)</strong>
-            <button className="pixel-button primary" type="button" onClick={() => navigate('/register/sessions')}>REGISTER FREE →</button>
+            <button className="pixel-button primary" type="button" onClick={() => openRegistration('sessions')}>REGISTER FREE →</button>
           </div>
         </Window>
       </section>
@@ -354,8 +383,8 @@ function App() {
 
       </>}
 
-      {activeEvent && <div className="register-page"><div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="registration-title"><Window title={`REGISTER/${activeEventData.file}`} onClose={() => closeRegistration()}>{submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="section-number">TRANSMISSION RECEIVED</p><h2>YOU'RE ON THE LIST.</h2><p>Your registration has reached the Vistaar control room. Venue details will be shared with your team leader.</p><button className="pixel-button primary" type="button" onClick={() => closeRegistration()}>BACK TO HQ</button></div> : <><p className="section-number">REGISTRATION / {activeEventData.title.toUpperCase()}</p><h2 id="registration-title">BUILD YOUR TEAM<span>.</span></h2><p className="modal-subtitle">{payment ? 'Scan the QR or tap Pay, then enter the UTR from your payment app.' : "Fill in the team leader's details. Add teammates below."}</p><form onSubmit={submitRegistration}><div className="form-step" hidden={Boolean(payment)}><label>TEAM NAME<input name="teamName" required placeholder="e.g. Byte Bandits" /></label><label>LEADER NAME<input name="leaderName" required placeholder="Your full name" /></label><div className="form-row"><label>EMAIL<input type="email" name="email" required placeholder="you@example.com" /></label><label>CONTACT NUMBER<input type="tel" name="contact" required placeholder="+91" /></label></div><div className="form-row"><label>IEEE MEMBERSHIP ID <span>(OPTIONAL)</span><input name="membershipId" placeholder="If applicable" /></label><label>COLLEGE<CollegeInput /></label></div><div className="member-count"><div><span className="field-label">TEAM MEMBERS</span><p>{activeEvent === 'murder' ? 'Cyber Heist (Murder Mystery) requires 2-4 members.' : 'CTF allows 1-4 members.'}</p></div><div className="stepper"><button type="button" onClick={() => setMemberCount(Math.max(minimumMembers, memberCount - 1))}>−</button><strong>{memberCount}</strong><button type="button" onClick={() => setMemberCount(Math.min(4, memberCount + 1))}>+</button></div></div>{Array.from({ length: memberCount - 1 }).map((_, index) => <div className="teammate-row" key={index}><span>MEMBER 0{index + 2}</span><input name={`member-${index + 2}-name`} required placeholder="Full name" /><input type="email" name={`member-${index + 2}-email`} required placeholder="Email" /><input name={`member-${index + 2}-membershipId`} placeholder="IEEE ID" title="IEEE membership ID (optional)" /></div>)}</div>{payment && (UPI_ID && UPI_PAYEE_NAME ? <div className="payment-step"><div className="payment-card"><div className="payment-qr"><QRCodeSVG value={buildUpiUri(payment.amount, payment.note)} size={150} level="M" /></div><div className="payment-details"><span className="field-label">AMOUNT DUE</span><strong>₹{payment.amount}</strong><p>Pay to <b>{UPI_PAYEE_NAME}</b><br /><code>{UPI_ID}</code></p><p className="payment-hint">IEEE members ₹{FEE_IEEE} · Others ₹{FEE_NON_IEEE} per person</p><a className="pixel-button" href={buildUpiUri(payment.amount, payment.note)}>PAY VIA UPI APP <span>→</span></a></div></div><label>UTR / REFERENCE NUMBER<input name="utrNumber" required inputMode="numeric" pattern="\d{12}" title="The 12-digit UTR / UPI reference number from your payment app" placeholder="e.g. 302411223344" /></label><label>PAYMENT SCREENSHOT<input type="file" name="screenshot" accept="image/*" required /><span>Shared with the organizers to verify your payment.</span></label></div> : <p className="form-error" role="alert">Payments are not configured yet. Please contact the organizers.</p>)}{submitError && <p className="form-error" role="alert">{submitError}</p>}<div className="form-actions">{payment && <button className="pixel-button" type="button" onClick={() => setPayment(null)} disabled={submitting}>← EDIT TEAM</button>}<button className="pixel-button primary" type="submit" disabled={submitting || (payment && !(UPI_ID && UPI_PAYEE_NAME))}>{submitting ? 'TRANSMITTING…' : payment ? <>SUBMIT REGISTRATION <span>↗</span></> : <>PROCEED TO PAYMENT <span>→</span></>}</button></div></form></>}</Window></div></div>}
-      {sessionOpen && <SessionRegistration onClose={closeRegistration} />}
+      {activeEvent && <div className={isMobile ? 'register-page' : 'modal-backdrop'} role="presentation" onMouseDown={(event) => !isMobile && event.target === event.currentTarget && closeRegistration()}><div className="registration-modal" role="dialog" aria-modal="true" aria-labelledby="registration-title"><Window title={`REGISTER/${activeEventData.file}`} onClose={() => closeRegistration()}>{submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="section-number">TRANSMISSION RECEIVED</p><h2>YOU'RE ON THE LIST.</h2><p>Your registration has reached the Vistaar control room. Venue details will be shared with your team leader.</p><button className="pixel-button primary" type="button" onClick={() => closeRegistration()}>BACK TO HQ</button></div> : <><p className="section-number">REGISTRATION / {activeEventData.title.toUpperCase()}</p><h2 id="registration-title">BUILD YOUR TEAM<span>.</span></h2><p className="modal-subtitle">{payment ? 'Scan the QR or tap Pay, then enter the UTR from your payment app.' : "Fill in the team leader's details. Add teammates below."}</p><form onSubmit={submitRegistration}><div className="form-step" hidden={Boolean(payment)}><label>TEAM NAME<input name="teamName" required placeholder="e.g. Byte Bandits" /></label><label>LEADER NAME<input name="leaderName" required placeholder="Your full name" /></label><div className="form-row"><label>EMAIL<input type="email" name="email" required placeholder="you@example.com" /></label><label>CONTACT NUMBER<input type="tel" name="contact" required placeholder="+91" /></label></div><div className="form-row"><label>IEEE MEMBERSHIP ID <span>(OPTIONAL)</span><input name="membershipId" placeholder="If applicable" /></label><label>COLLEGE<CollegeInput /></label></div><div className="member-count"><div><span className="field-label">TEAM MEMBERS</span><p>{activeEvent === 'murder' ? 'Cyber Heist (Murder Mystery) requires 2-4 members.' : 'CTF allows 1-4 members.'}</p></div><div className="stepper"><button type="button" onClick={() => setMemberCount(Math.max(minimumMembers, memberCount - 1))}>−</button><strong>{memberCount}</strong><button type="button" onClick={() => setMemberCount(Math.min(4, memberCount + 1))}>+</button></div></div>{Array.from({ length: memberCount - 1 }).map((_, index) => <div className="teammate-row" key={index}><span>MEMBER 0{index + 2}</span><input name={`member-${index + 2}-name`} required placeholder="Full name" /><input type="email" name={`member-${index + 2}-email`} required placeholder="Email" /><input name={`member-${index + 2}-membershipId`} placeholder="IEEE ID" title="IEEE membership ID (optional)" /></div>)}</div>{payment && (UPI_ID && UPI_PAYEE_NAME ? <div className="payment-step"><div className="payment-card"><div className="payment-qr"><QRCodeSVG value={buildUpiUri(payment.amount, payment.note)} size={150} level="M" /></div><div className="payment-details"><span className="field-label">AMOUNT DUE</span><strong>₹{payment.amount}</strong><p>Pay to <b>{UPI_PAYEE_NAME}</b><br /><code>{UPI_ID}</code></p><p className="payment-hint">IEEE members ₹{FEE_IEEE} · Others ₹{FEE_NON_IEEE} per person</p><a className="pixel-button" href={buildUpiUri(payment.amount, payment.note)}>PAY VIA UPI APP <span>→</span></a></div></div><label>UTR / REFERENCE NUMBER<input name="utrNumber" required inputMode="numeric" pattern="\d{12}" title="The 12-digit UTR / UPI reference number from your payment app" placeholder="e.g. 302411223344" /></label><label>PAYMENT SCREENSHOT<input type="file" name="screenshot" accept="image/*" required /><span>Shared with the organizers to verify your payment.</span></label></div> : <p className="form-error" role="alert">Payments are not configured yet. Please contact the organizers.</p>)}{submitError && <p className="form-error" role="alert">{submitError}</p>}<div className="form-actions">{payment && <button className="pixel-button" type="button" onClick={() => setPayment(null)} disabled={submitting}>← EDIT TEAM</button>}<button className="pixel-button primary" type="submit" disabled={submitting || (payment && !(UPI_ID && UPI_PAYEE_NAME))}>{submitting ? 'TRANSMITTING…' : payment ? <>SUBMIT REGISTRATION <span>↗</span></> : <>PROCEED TO PAYMENT <span>→</span></>}</button></div></form></>}</Window></div></div>}
+      {sessionOpen && <SessionRegistration onClose={closeRegistration} isMobile={isMobile} />}
     </main>
   )
 }
