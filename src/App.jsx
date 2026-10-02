@@ -70,6 +70,12 @@ const compressImage = (file) => new Promise((resolve, reject) => {
 
 // Retro desktop window used for every panel: mustard title bar with the _ □ × controls from the poster.
 // Passing `onClose` turns the × into a real close button.
+// In-page links scroll with JS instead of an href, so no #fragment shows in the address bar or hover preview.
+function ScrollLink({ to, className, children }) {
+  const go = () => document.getElementById(to)?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+  return <a role="button" tabIndex={0} className={className} onClick={go} onKeyDown={(event) => (event.key === 'Enter' || event.key === ' ') && (event.preventDefault(), go())}>{children}</a>
+}
+
 function Window({ title, className = '', onClose, children }) {
   return (
     <div className={`window ${className}`}>
@@ -221,10 +227,10 @@ function App() {
     <main>
       <header className="topbar">
         <nav className="menubar" aria-label="Primary navigation">
-          <a href="#events"><u>E</u>vents</a>
-          <a href="#sessions"><u>S</u>essions</a>
-          <a href="#details"><u>D</u>etails</a>
-          <a href="#faq"><u>H</u>elp</a>
+          <ScrollLink to="events"><u>E</u>vents</ScrollLink>
+          <ScrollLink to="sessions"><u>S</u>essions</ScrollLink>
+          <ScrollLink to="details"><u>D</u>etails</ScrollLink>
+          <ScrollLink to="faq"><u>H</u>elp</ScrollLink>
         </nav>
       </header>
 
@@ -236,7 +242,7 @@ function App() {
         <span className="sparkle sparkle-b" aria-hidden="true">✛</span>
         <h1 className="pixel-title">VISTAAR</h1>
         <div className="hero-tags"><span>TECHNICAL EVENTS</span><span>INDUSTRY SEMINARS</span></div>
-        <a className="pixel-button primary hero-register" href="#events">REGISTER ↗</a>
+        <ScrollLink className="pixel-button primary hero-register" to="events">REGISTER ↗</ScrollLink>
         <div className="hero-windows">
           <Window title="DATE" className="date-window">
             <strong>13<sup>TH</sup></strong>
@@ -255,7 +261,7 @@ function App() {
             </div>
           </Window>
         </div>
-        <a className="pixel-button primary" href="#events">CHOOSE YOUR CASE →</a>
+        <ScrollLink className="pixel-button primary" to="events">CHOOSE YOUR CASE →</ScrollLink>
         <p className="motto">CODE <i /> COLLABORATE <i /> CREATE <i /> BEYOND</p>
       </section>
 

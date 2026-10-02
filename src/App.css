@@ -237,3 +237,4 @@ input[type=file] { padding: 8px; cursor: pointer; }
 .society-members div { display: contents; }
 .society-members dt { color: var(--gold-light); }
 .society-members dd { margin: 0; }
+.menubar a, .pixel-button { cursor: pointer; }
