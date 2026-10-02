@@ -34,6 +34,7 @@ const CONTACTS = [
 ]
 const SOCIETY_MEMBERS = [
   ['IEEE SB Chair', 'Harsh Othy'],
+  ['IEEE SB Vice Chair', 'Kushal Itnal'],
   ['Chair', 'Jaydeep Nadkarni'],
   ['Vice Chair', 'Kalash Rao'],
   ['Secretary', 'Sarvadnya Patil'],
@@ -322,7 +323,7 @@ function App() {
             </div>
           </Window>
         </div>
-        <ScrollLink className="pixel-button primary" to="events">CHOOSE YOUR CASE →</ScrollLink>
+        <ScrollLink className="pixel-button primary" to="events">CHOOSE YOUR EVENT →</ScrollLink>
         <p className="motto">CODE <i /> COLLABORATE <i /> CREATE <i /> BEYOND</p>
       </section>
 
