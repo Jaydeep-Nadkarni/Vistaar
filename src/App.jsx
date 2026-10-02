@@ -33,6 +33,7 @@ const CONTACTS = [
 ]
 const SOCIETY_MEMBERS = [
   ['IEEE SB Chair', 'Harsh Othy'],
+  ['IEEE SB Vice Chair', 'Kushal Itnal'],
   ['Chair', 'Jaydeep Nadkarni'],
   ['Vice Chair', 'Kalash Rao'],
   ['Secretary', 'Sarvadnya Patil'],
