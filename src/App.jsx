@@ -27,8 +27,16 @@ const SHEETS_URL = import.meta.env.VITE_SHEETS_URL
 const UPI_ID = import.meta.env.VITE_UPI_ID
 const UPI_PAYEE_NAME = import.meta.env.VITE_UPI_PAYEE_NAME
 const CONTACTS = [
-  { name: 'Jaydeep Nadkarni', phone: '+91 94817 40500', tel: '+919481740500' },
+  { name: 'Jaydeep Nadkarni', phone: '+91 94817 40517', tel: '+919481740517' },
   { name: 'Karthik Hirenarti', phone: '+91 72044 04872', tel: '+917204404872' },
+]
+const SOCIETY_MEMBERS = [
+  ['Chair', 'Jaydeep Nadkarni'],
+  ['Vice Chair', 'Kalash Rao'],
+  ['Secretary', 'Sarvadnya Patil'],
+  ['Joint-Secretary', 'Parth Kulkarni'],
+  ['Treasurer', 'Sayali Gambhir'],
+  ['Technical Lead', 'Karthik Hirenarti'],
 ]
 const FEE_IEEE = Number(import.meta.env.VITE_FEE_IEEE || 100)
 const FEE_NON_IEEE = Number(import.meta.env.VITE_FEE_NON_IEEE || 150)
@@ -212,10 +220,6 @@ function App() {
   return (
     <main>
       <header className="topbar">
-        <div className="topbar-titlebar">
-          <span className="window-title">VISTAAR.EXE — IEEE KLE TECH</span>
-          <span className="window-controls" aria-hidden="true"><i className="ctl-min" /><i>□</i><i>×</i></span>
-        </div>
         <nav className="menubar" aria-label="Primary navigation">
           <a href="#events"><u>E</u>vents</a>
           <a href="#sessions"><u>S</u>essions</a>
@@ -244,10 +248,10 @@ function App() {
           </Window>
           <Window title="root@vistaar:~" className="terminal-window">
             <div className="terminal">
-              <span>$ ./launch_event.sh</span>
-              <strong>ACCESS GRANTED</strong>
-              <span>status: registrations_open</span>
-              <b className="cursor">_</b>
+              <span className="terminal-cmd">$ cat society_members.txt</span>
+              <dl className="society-members">
+                {SOCIETY_MEMBERS.map(([role, name]) => <div key={role}><dt>{role}</dt><dd>{name}</dd></div>)}
+              </dl>
             </div>
           </Window>
         </div>
@@ -279,7 +283,6 @@ function App() {
             <ul className="session-list">{sessions.map((session) => <li key={session}>{session}</li>)}</ul>
             <strong className="free-tag">(FREE TO REGISTER!)</strong>
             <button className="pixel-button primary" type="button" onClick={() => setSessionOpen(true)}>REGISTER FREE →</button>
-            <b className="cursor">_</b>
           </div>
         </Window>
       </section>
